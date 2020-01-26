@@ -11,6 +11,7 @@ import net.simplifiedcoding.data.Author
 class AuthorsAdapter : RecyclerView.Adapter<AuthorsAdapter.AuthorViewModel>() {
 
     private var authors = mutableListOf<Author>()
+    var listener: RecyclerViewClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = AuthorViewModel(
         LayoutInflater.from(parent.context)
@@ -21,6 +22,12 @@ class AuthorsAdapter : RecyclerView.Adapter<AuthorsAdapter.AuthorViewModel>() {
 
     override fun onBindViewHolder(holder: AuthorViewModel, position: Int) {
         holder.view.text_view_name.text = authors[position].name
+        holder.view.button_edit.setOnClickListener {
+            listener?.onRecyclerViewItemClicked(it, authors[position])
+        }
+        holder.view.button_delete.setOnClickListener {
+            listener?.onRecyclerViewItemClicked(it, authors[position])
+        }
     }
 
     fun setAuthors(authors: List<Author>) {
@@ -31,8 +38,15 @@ class AuthorsAdapter : RecyclerView.Adapter<AuthorsAdapter.AuthorViewModel>() {
     fun addAuthor(author: Author) {
         if (!authors.contains(author)) {
             authors.add(author)
-            notifyDataSetChanged()
+        } else {
+            val index = authors.indexOf(author)
+            if (author.isDeleted) {
+                authors.removeAt(index)
+            } else {
+                authors[index] = author
+            }
         }
+        notifyDataSetChanged()
     }
 
     class AuthorViewModel(val view: View) : RecyclerView.ViewHolder(view)

@@ -41,7 +41,11 @@ class AuthorsViewModel : ViewModel() {
 
         override fun onChildMoved(snapshot: DataSnapshot, p1: String?) {}
 
-        override fun onChildChanged(snapshot: DataSnapshot, p1: String?) {}
+        override fun onChildChanged(snapshot: DataSnapshot, p1: String?) {
+            val author = snapshot.getValue(Author::class.java)
+            author?.id = snapshot.key
+            _author.value = author
+        }
 
         override fun onChildAdded(snapshot: DataSnapshot, p1: String?) {
             val author = snapshot.getValue(Author::class.java)
@@ -49,7 +53,12 @@ class AuthorsViewModel : ViewModel() {
             _author.value = author
         }
 
-        override fun onChildRemoved(snapshot: DataSnapshot) {}
+        override fun onChildRemoved(snapshot: DataSnapshot) {
+            val author = snapshot.getValue(Author::class.java)
+            author?.id = snapshot.key
+            author?.isDeleted = true
+            _author.value = author
+        }
     }
 
     fun getRealtimeUpdates() {
@@ -72,6 +81,28 @@ class AuthorsViewModel : ViewModel() {
                 }
             }
         })
+    }
+
+    fun updateAuthor(author: Author) {
+        dbAuthors.child(author.id!!).setValue(author)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    _result.value = null
+                } else {
+                    _result.value = it.exception
+                }
+            }
+    }
+
+    fun deleteAuthor(author: Author) {
+        dbAuthors.child(author.id!!).setValue(null)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    _result.value = null
+                } else {
+                    _result.value = it.exception
+                }
+            }
     }
 
     override fun onCleared() {

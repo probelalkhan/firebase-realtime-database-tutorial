@@ -9,4 +9,8 @@
     <string name="error_field_required">This Field Required</string>
     <string name="author_added">Author Successfully Added</string>
     <string name="error">Error: %1$s</string>
+    <string name="edit_author">Edit Author</string>
+    <string name="update">Update</string>
+    <string name="delete_confirmation">Are you sure you want to delete?</string>
+    <string name="yes">Yes</string>
 </resources>

@@ -5,7 +5,9 @@ import com.google.firebase.database.Exclude
 data class Author(
     @get:Exclude
     var id: String? = null,
-    var name: String? = null
+    var name: String? = null,
+    @get:Exclude
+    var isDeleted: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         return if (other is Author) {
