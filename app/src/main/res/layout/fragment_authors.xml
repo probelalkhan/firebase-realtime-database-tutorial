@@ -7,6 +7,7 @@
     tools:context=".ui.AuthorsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/recycler_view_authors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
