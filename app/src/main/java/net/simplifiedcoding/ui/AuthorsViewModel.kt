@@ -3,10 +3,7 @@ package net.simplifiedcoding.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import net.simplifiedcoding.data.Author
 import net.simplifiedcoding.data.NODE_AUTHORS
 import java.lang.Exception
@@ -18,6 +15,10 @@ class AuthorsViewModel : ViewModel() {
     private val _authors = MutableLiveData<List<Author>>()
     val authors: LiveData<List<Author>>
         get() = _authors
+
+    private val _author = MutableLiveData<Author>()
+    val author: LiveData<Author>
+        get() = _author
 
     private val _result = MutableLiveData<Exception?>()
     val result: LiveData<Exception?>
@@ -33,6 +34,26 @@ class AuthorsViewModel : ViewModel() {
                     _result.value = it.exception
                 }
             }
+    }
+
+    private val childEventListener = object : ChildEventListener {
+        override fun onCancelled(error: DatabaseError) {}
+
+        override fun onChildMoved(snapshot: DataSnapshot, p1: String?) {}
+
+        override fun onChildChanged(snapshot: DataSnapshot, p1: String?) {}
+
+        override fun onChildAdded(snapshot: DataSnapshot, p1: String?) {
+            val author = snapshot.getValue(Author::class.java)
+            author?.id = snapshot.key
+            _author.value = author
+        }
+
+        override fun onChildRemoved(snapshot: DataSnapshot) {}
+    }
+
+    fun getRealtimeUpdates() {
+        dbAuthors.addChildEventListener(childEventListener)
     }
 
     fun fetchAuthors() {
@@ -53,4 +74,8 @@ class AuthorsViewModel : ViewModel() {
         })
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        dbAuthors.removeEventListener(childEventListener)
+    }
 }

@@ -23,9 +23,16 @@ class AuthorsAdapter : RecyclerView.Adapter<AuthorsAdapter.AuthorViewModel>() {
         holder.view.text_view_name.text = authors[position].name
     }
 
-    fun setAuthors(authors: List<Author>){
+    fun setAuthors(authors: List<Author>) {
         this.authors = authors as MutableList<Author>
         notifyDataSetChanged()
+    }
+
+    fun addAuthor(author: Author) {
+        if (!authors.contains(author)) {
+            authors.add(author)
+            notifyDataSetChanged()
+        }
     }
 
     class AuthorViewModel(val view: View) : RecyclerView.ViewHolder(view)
