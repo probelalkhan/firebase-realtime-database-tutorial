@@ -10,17 +10,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/text_view_name"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_toStartOf="@id/layout_options"
-            android:fontFamily="sans-serif-light"
-            android:padding="18dp"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            tools:text="Belal Khan" />
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/text_view_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                tools:text="Belal Khan" />
+
+            <TextView
+                android:id="@+id/text_view_city_votes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_name"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12dp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                tools:text="Bangalore | Votes : 2341" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_options"

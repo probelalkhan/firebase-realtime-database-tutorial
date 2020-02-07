@@ -65,6 +65,67 @@ class AuthorsViewModel : ViewModel() {
         dbAuthors.addChildEventListener(childEventListener)
     }
 
+
+    fun fetchFilteredAuthors(index: Int) {
+        val dbAuthors =
+            when (index) {
+                1 ->
+                    //#1 SELECT * FROM Authors
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+
+                2 ->
+                    //#2 SELECT * FROM Authors WHERE id = ?
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+                        .child("-M-3fFw3GbovXWguSjp8")
+
+                3 ->
+                    //#3 SELECT * FROM Authors WHERE city = ?
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+                        .orderByChild("city")
+                        .equalTo("Hyderabad")
+
+                4 ->
+                    //#4 SELECT * FROM Authors LIMIT 2
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+                        .limitToFirst(2)
+
+                5 ->
+                    //#5 SELECT * FROM Authors WHERE votes < 500
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+                        .orderByChild("votes")
+                        .endAt(500.toDouble())
+
+                6 ->
+                    //#6 SELECT * FROM Artists WHERE name LIKE "A%"
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+                        .orderByChild("name")
+                        .startAt("A")
+                        .endAt("A\uf8ff")
+
+                7 ->
+                    //#7 SELECT * FROM Artists Where votes < 500 AND city = Bangalore
+                    FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+                else -> FirebaseDatabase.getInstance().getReference(NODE_AUTHORS)
+            }
+
+        dbAuthors.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {}
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val authors = mutableListOf<Author>()
+                    for (authorSnapshot in snapshot.children) {
+                        val author = authorSnapshot.getValue(Author::class.java)
+                        author?.id = authorSnapshot.key
+                        author?.let { authors.add(it) }
+                    }
+                    _authors.value = authors
+                }
+            }
+        })
+    }
+
+
     fun fetchAuthors() {
         dbAuthors.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
