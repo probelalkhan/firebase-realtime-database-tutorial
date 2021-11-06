@@ -34,7 +34,7 @@ class AuthorsFragment : Fragment(), RecyclerViewClickListener {
         adapter.listener = this
         recycler_view_authors.adapter = adapter
 
-        viewModel.fetchFilteredAuthors(6)
+        viewModel.fetchFilteredAuthors(1)
 //        viewModel.getRealtimeUpdates()
 
         viewModel.authors.observe(viewLifecycleOwner, Observer {
