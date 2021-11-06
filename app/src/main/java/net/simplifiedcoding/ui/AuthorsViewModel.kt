@@ -127,7 +127,10 @@ class AuthorsViewModel : ViewModel() {
 
 
     fun fetchAuthors() {
-        dbAuthors.addListenerForSingleValueEvent(object : ValueEventListener {
+        // 🔥 addValueEventListener() : keeps listening to query or database reference it is attached to
+        // 🔥 addListenerForSingleValueEvent() executes OnDataChange method immediately and
+        // after executing that method once it stops listening to the reference location it is attached to.
+        dbAuthors.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
 
             override fun onDataChange(snapshot: DataSnapshot) {
